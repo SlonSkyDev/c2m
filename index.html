@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="main.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+</head>
+<body>
+<h1 class="header">Code 2 Music</h1>
+	<div class="edit">
+		<textarea placeholder="Put code here" id="code">
+package Engine.core;
+
+import Engine.audio.AudioEngine;
+import Engine.rendering.RenderingEngine;
+import Game.Game;
+
+/**
+ * Created by Slon on 09.02.2016.
+ */
+public class CoreEngine {
+    private boolean isRunning;
+    private int width;
+    private int height;
+    private Game game;
+    private RenderingEngine renderingEngine;
+    private double frameTime;
+    private int FPS;
+//    private AudioEngine audioEngine;
+
+    public CoreEngine(int width, int height, double frameRate, Game game) {
+        isRunning = false;
+        this.width = width;
+        this.height = height;
+        this.frameTime = 1.0 / frameRate;
+        this.game = game;
+        game.setEngine(this);
+    }
+
+    public void createWindow(String title, boolean full){
+        if(full){
+            Window.createFullWindow(title);
+        } else {
+            Window.createWindow(width, height, title);
+        }
+        renderingEngine = new RenderingEngine(this);
+        AudioEngine.init();
+//        audioEngine = new AudioEngine();
+    }
+}
+		</textarea><br>
+		<button id="play">PLAYIT!</button>
+        <button id="stop">stop that!</button>
+        <radiogroup></radiogroup>
+	</div>
+	<script type="text/javascript" src="muslib.js"></script>
+	<script type="text/javascript" src="player.js"></script>
+	<script type="text/javascript">
+
+        $("#play").on("click", function() {
+
+            var t = parse($("#code").val(), 4);    
+            var m = makeMelody(t);
+
+            playMelody(m);
+
+            $("#play").prop("disabled", true);
+        });
+        
+		$("#stop").on("click", function() {
+
+            stopPlaying();
+            $("#play").prop("disabled", false);
+        });
+
+	</script>
+</body>
+</html>

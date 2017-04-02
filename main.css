@@ -1,0 +1,20 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+.edit{
+	margin-left: 20%;
+}
+
+.edit > textarea {
+	width: 800px;
+	height: 400px;
+	resize: none;
+}
+
+.header {
+	font-size: 72pt;
+	color: red;
+	text-align: center;
+}
