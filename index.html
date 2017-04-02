@@ -61,7 +61,7 @@ public class CoreEngine {
 
         $("#play").on("click", function() {
 
-            var t = parse($("#code").val(), findTabLength(document.getElementById('code').value));    
+            var t = parse($("#code").val(), 4);    
             var m = makeMelody(t);
 
             playMelody(m);

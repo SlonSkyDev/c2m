@@ -1,51 +1,60 @@
+'use strict';
+
+/**
+ * Take string of code and find difference in spaces amount at start of
+ * line between two lines. If line contain tabulation that consist both
+ * of tabs and spaces - we do not take this line in count. After we find out
+ * spaces amount in one tab we convert all tabs to spaces. If there was no line
+ * with spaces (or amount of lines with spaces is too small), we assume that one
+ * tab four spaces long.
+ * @param  {String} code
+ * @return {String} code
+ */
 function findTabLength(code) {
-	var currentLineSpaces = 0;
-	var previousLineSpaces = 0;
-	var spacesDifferenceAmount = [];
-	var i;
-	var medianValue = 0;
-	var countSpaces = true;
 
-	// Find spaces in current line
-	for(i = 0; ; i++) {
-		if(code[i] == ' ' && countSpaces) {
-			previousLineSpaces++;
-		} else if(code[i] == '\n') {
-			countSpaces = true;
-			break;
-		} else {
-			countSpaces = false;
-			continue;
-		}
-	}
+    let spacesInTab = 4;
+    let currentLineSpaces = 0;
+    let previousLineSpaces = null;
+    let lineStartIndex = 0;
+    let codeStartIndex = 0;
+    let codeStartFound = false;
+    let spacesDifference = null;
+    let spacesDifferenceArray = [];
 
-	i = i + 1;
+    for(let i = 0; i < code.length; i++) {
+        if(code[i] != ' ') {
+            if(!codeStartFound) {
+                codeStartIndex = i;
+                codeStartFound = true;
+            }
+            if(code[i] == '\n') {
+                currentLineSpaces = codeStartIndex - lineStartIndex;
 
-	for(; i < code.length + 1; i++) {
-	
-	
-		if(code[i] == ' ' && countSpaces) {
-			currentLineSpaces++;
-		} else if(code[i] == '\n' || i == code.length) {
-			countSpaces = true;
-			if(currentLineSpaces - previousLineSpaces != 0)
-				spacesDifferenceAmount.push(Math.abs(currentLineSpaces - previousLineSpaces));
-			previousLineSpaces = currentLineSpaces;
-			currentLineSpaces = 0;
-			if(code[i+1] == '\n')
-				i++;
-		} else {
-			countSpaces = false;
-			continue;
-		}
-	}
+                if(previousLineSpaces !== null)
+                    spacesDifference = Math.abs(currentLineSpaces -
+                                                    previousLineSpaces);
 
-	console.log(spacesDifferenceAmount);
-	medianValue = Math.round(median(spacesDifferenceAmount));
-	console.log(medianValue);
-	return medianValue;
+                // If there is some difference in amount of spaces between
+                // current and previous lines and line does not
+                // contain '\t' push difference to array.
+                if(spacesDifference != 0 && spacesDifference !== null &&
+                            !code.substring(lineStartIndex, i).includes('\t')) {
+                    spacesDifferenceArray.push(spacesDifference);
+                }
+                lineStartIndex = i + 1;
+                codeStartFound = false;
+            }
+        }
+    }
+
+    console.log(spacesDifferenceArray);
 }
 
+/**
+* Find median value in given array.
+* @param  {Number array} values
+* @return {Number} medianValue
+*/
 function median(values) {
 
     values.sort( function(a,b) {return a - b;} );
@@ -56,4 +65,43 @@ function median(values) {
         return values[half];
     else
         return (values[half-1] + values[half]) / 2.0;
+}
+
+/**
+* Return true, if code contain tabs ('\t'), false otherwise.
+* @param  {String} code
+* @return {Boolean} containTabs
+*/
+function isContainTabs(code) {
+    let containTabs = false;
+
+    for(let i = 0; i < code.length; i++) {
+        if(code[i] == '\t')
+            containTabs = false;
+    }
+
+    return containTabs;
+}
+
+/**
+* Replace all tabs in given string with amount of spaces
+* given in tabLength spaces.
+* @param  {String} code
+* @param  {Number} tabLength 
+* @return {String} code
+*/
+function replaceTabs(code, tabLength) {
+    let spaces = '';
+
+    for(let i = 0; i < tabLength; i++) {
+        spaces += ' ';
+    }
+
+    for(let i = 0; i < code.length; i++) {
+        if(code[i] == '\t') {
+            code.splice(i, 1, spaces);
+        }
+    }
+
+    return code;
 }
