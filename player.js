@@ -96,7 +96,7 @@ function makeMelody(analysed, tabSize) {
 
 		// Create arpegio
 
-		chord.push[chord.length - 2]; // add II level
+		chord.push(chord[chord.length - 2]); // add II level
 
 		// Get duration
 
