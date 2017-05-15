@@ -91,7 +91,9 @@ function makeMelody(analysed, tabSize) {
 						    % SCALE.length 								// in current octave
 						 ];
 
-			chord[0] = tonic + tonicOctave;
+			chord[0].tone = tonic;
+			chord[1].tone = SCALE[(SCALE.indexOf(chord[1].tone)+1) % SCALE.length];
+			chord[2].tone = SCALE[(SCALE.indexOf(chord[2].tone)+2) % SCALE.length];
 		}
 
 		// Create arpegio
@@ -100,7 +102,7 @@ function makeMelody(analysed, tabSize) {
 
 		// Get duration
 
-		var durations = makeDurations(chord.length, (line.length > 80)); // for length > 80 wrong beat
+		var durations = makeDurations(chord.length, line.length); // for length > 80 wrong beat
 
 		// Add arpegio to melody
 
@@ -111,17 +113,16 @@ function makeMelody(analysed, tabSize) {
 					// note: chord[j],
 				 	
 				 	// FOR OLD PLAYER
-				 	note: chord[j][0],
-				 	octave: chord[j][1],  
+				 	note: chord[j].tone,
+				 	octave: chord[j].octave,  
 				 	// ---------------
 
 				 	duration: durations[j]
 				}
 			);
-			console.log(chord[j] + ' ' + durations[j]);
 		}
 	}
-
+	melody.push( {note: TONICS[0], octave: BASE_OCTAVE, duration: 0.5}); // final chord
 	return melody;
 
 	function buildChord(tonic, octave) {
@@ -134,14 +135,14 @@ function makeMelody(analysed, tabSize) {
 		var IIIlevelIndex = (tonicIndex + 4); 
 		var IIIlevelOctave = octave + Math.floor(IIIlevelIndex / TONICS.length);
 
-		chord.push(TONICS[tonicIndex] + octave);
-		chord.push(TONICS[IIlevelIndex % TONICS.length] + IIlevelOctave);
-		chord.push(TONICS[IIIlevelIndex % TONICS.length] + IIIlevelOctave);
+		chord.push({ tone: TONICS[tonicIndex],  octave: octave});
+		chord.push({ tone: TONICS[IIlevelIndex % TONICS.length], octave: IIlevelOctave});
+		chord.push({ tone: TONICS[IIIlevelIndex % TONICS.length], octave: IIIlevelOctave});
 
 		return chord;
 	}
 
-	function makeDurations(count, incorrect) {
+	function makeDurations(count, len) {
 
 		// FOR NEW PLAYER
 		// var DURATIONS_SET = ['1n', '2n', '4n', '8n']; 
@@ -152,11 +153,19 @@ function makeMelody(analysed, tabSize) {
 
 		var durations = [];
 		for(var i = 0; i < count; i++) {
-			if(incorrect) {
-				durations.push(DURATIONS_SET[Math.floor(Math.random()*DURATIONS_SET.length)]); // random duration
+			var duration;
+			if(len > 80) {
+				duration = DURATIONS_SET[Math.floor(Math.random()*DURATIONS_SET.length)];
+			} else if(len > 40) {
+				if(i == 2) {
+					duration = DURATIONS_SET[2];
+				} else {
+					duration = DURATIONS_SET[3];
+				}
 			} else {
-				durations.push(DURATIONS_SET[2]);
+				duration = DURATIONS_SET[2];
 			}
+			durations.push(duration);
 		}
 		return durations;
 	}
@@ -204,8 +213,9 @@ function makeMelody(analysed, tabSize) {
 
 var stop;
 function playMelody(melody) {
-	var piano = Synth.createInstrument('acoustic');
+	var piano = Synth.createInstrument('piano');
 	var n = 0;
+	var pause = 0;
 	stop = false;
 	play();
 
@@ -218,8 +228,15 @@ function playMelody(melody) {
 
 			return;
 		}
-		setTimeout(play, note['duration']*1000-25);
+		setTimeout(play, note.duration*1000 - 30);
 	}
+
+	// function melodyLength() {
+	// 	var len = 0;
+	// 	for(var i = 0; i < melody.length; i++) {
+	// 		len += note['duration']*1000;
+	// 	}
+	// }
 
 }
 
