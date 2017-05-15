@@ -3,6 +3,7 @@
 <head>
 	<title>C2M</title>
     <script type="text/javascript" src="js/lib/audiosynth/audiosynth.js"></script>
+    <script type="text/javascript" src="js/lib/tone.js/tone.js"></script>
     <script src="script.js"></script>
 	<link rel="stylesheet" type="text/css" href="main.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
@@ -11,45 +12,11 @@
 <h1 class="header">Code 2 Music</h1>
 	<div class="edit">
 		<textarea placeholder="Put code here" id="code">
-package Engine.core;
-
-import Engine.audio.AudioEngine;
-import Engine.rendering.RenderingEngine;
-import Game.Game;
-
-/**
- * Created by Slon on 09.02.2016.
- */
-public class CoreEngine {
-    private boolean isRunning;
-    private int width;
-    private int height;
-    private Game game;
-    private RenderingEngine renderingEngine;
-    private double frameTime;
-    private int FPS;
-//    private AudioEngine audioEngine;
-
-    public CoreEngine(int width, int height, double frameRate, Game game) {
-        isRunning = false;
-        this.width = width;
-        this.height = height;
-        this.frameTime = 1.0 / frameRate;
-        this.game = game;
-        game.setEngine(this);
-    }
-
-    public void createWindow(String title, boolean full){
-        if(full){
-            Window.createFullWindow(title);
-        } else {
-            Window.createWindow(width, height, title);
-        }
-        renderingEngine = new RenderingEngine(this);
-        AudioEngine.init();
-//        audioEngine = new AudioEngine();
-    }
-}
+sdfasdfasdf
+    sdfasdfasdf
+        sdfasdfasdf
+    sdfasdfasdf
+ sdfasdfasdfafgfdgjslfajsdl;fha;enmsilvhnahh;vnslashg;inavs;rhv;rsdhfa;snvlashvnlseuhcurvn fasj;vnasrvhn'aisnvm'arv
 		</textarea><br>
 		<button id="play">PLAYIT!</button>
         <button id="stop">stop that!</button>
@@ -61,8 +28,8 @@ public class CoreEngine {
 
         $("#play").on("click", function() {
 
-            var t = parse($("#code").val(), findTabLength(document.getElementById('code').value));    
-            var m = makeMelody(t);
+            var t = parse($("#code").val());    
+            var m = makeMelody(t, findTabLength(document.getElementById('code').value));
 
             playMelody(m);
 
@@ -76,5 +43,19 @@ public class CoreEngine {
         });
 
 	</script>
+    <script type="text/javascript">
+        
+// var synth = new Tone.FMSynth().toMaster();
+
+// //schedule a series of notes to play as soon as the page loads
+// synth.triggerAttackRelease('C4', '4n', '8n');
+// synth.triggerAttackRelease('E4', '8n', '4n + 8n');
+// synth.triggerAttackRelease('G4', '16n', '2n');
+// synth.triggerAttackRelease('B4', '16n', '2n + 8t');
+// synth.triggerAttackRelease('G4', '16','2n + 8t * 2');
+// synth.triggerAttackRelease('E4', '2n', '0:3');
+
+
+    </script>
 </body>
 </html>
